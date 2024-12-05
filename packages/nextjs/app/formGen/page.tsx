@@ -67,10 +67,8 @@ export default function PortfolioForm() {
 
       await reclaimProofRequest.startSession({
         onSuccess: (proofs: any) => {
-          // Extract relevant data based on platform
           let verifiedValue = '';
           try {
-            const parameters = JSON.parse(proofs.claimData.parameters);
             const context = JSON.parse(proofs.claimData.context);
             const extractedParams = context.extractedParameters;
 
@@ -86,7 +84,6 @@ export default function PortfolioForm() {
                 break;
             }
 
-            // Update form data with verified value
             setFormData(prev => ({
               ...prev,
               [platform]: verifiedValue
@@ -145,9 +142,23 @@ export default function PortfolioForm() {
       return;
     }
 
+    // Validate that all platforms are verified
+    const allPlatformsVerified = Object.keys(PROVIDER_IDS).every(platform => 
+      verifiedPlatforms.has(platform)
+    );
+
+    if (!allPlatformsVerified) {
+      toast({
+        title: "Verification Incomplete",
+        description: "Please verify all platforms before minting",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await writeContractAsync({
+      const tx = await writeContractAsync({
         functionName: "mintPortfolio",
         args: [
           address,
@@ -156,7 +167,7 @@ export default function PortfolioForm() {
           formData.github,
           formData.codechef,
           formData.linkedin
-        ]
+        ],
       });
 
       toast({
@@ -164,6 +175,17 @@ export default function PortfolioForm() {
         description: "Portfolio NFT minted successfully!",
         variant: "success"
       });
+
+      // Reset form after successful mint
+      setFormData({
+        name: "",
+        email: "",
+        github: "",
+        codechef: "",
+        linkedin: ""
+      });
+      setVerifiedPlatforms(new Set());
+
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast({
@@ -237,7 +259,7 @@ export default function PortfolioForm() {
             <button 
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               onClick={mintNFT}
-              disabled={isLoading || Object.keys(PROVIDER_IDS).some(platform => !verifiedPlatforms.has(platform))}
+              // disabled={isLoading || !formData.name || !formData.email || Object.keys(PROVIDER_IDS).some(platform => !verifiedPlatforms.has(platform))}
             >
               Mint NFT
             </button>
