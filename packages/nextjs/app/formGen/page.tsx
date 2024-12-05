@@ -142,15 +142,10 @@ export default function PortfolioForm() {
       return;
     }
 
-    // Validate that all platforms are verified
-    const allPlatformsVerified = Object.keys(PROVIDER_IDS).every(platform => 
-      verifiedPlatforms.has(platform)
-    );
-
-    if (!allPlatformsVerified) {
+    if (!formData.name || !formData.email) {
       toast({
-        title: "Verification Incomplete",
-        description: "Please verify all platforms before minting",
+        title: "Required Fields Missing",
+        description: "Please fill in your name and email",
         variant: "destructive"
       });
       return;
@@ -164,9 +159,9 @@ export default function PortfolioForm() {
           address,
           formData.name,
           formData.email,
-          formData.github,
-          formData.codechef,
-          formData.linkedin
+          formData.github || "",
+          formData.codechef || "",
+          formData.linkedin || ""
         ],
       });
 
@@ -235,7 +230,7 @@ export default function PortfolioForm() {
           {Object.keys(PROVIDER_IDS).map((platform) => (
             <div key={platform} className="form-control">
               <label className="label">
-                <span className="label-text capitalize">{platform} Username</span>
+                <span className="label-text capitalize">{platform} Username (Optional)</span>
                 <button 
                   className={`btn btn-sm ${verifiedPlatforms.has(platform) ? 'btn-success' : 'btn-outline'}`}
                   onClick={() => handleVerify(platform)}
@@ -249,7 +244,6 @@ export default function PortfolioForm() {
                 className={`input input-bordered ${verifiedPlatforms.has(platform) ? 'input-success' : ''}`}
                 value={formData[platform as keyof FormData]}
                 onChange={handleInputChange}
-                required
                 readOnly={verifiedPlatforms.has(platform)}
               />
             </div>
@@ -259,7 +253,7 @@ export default function PortfolioForm() {
             <button 
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               onClick={mintNFT}
-              // disabled={isLoading || !formData.name || !formData.email || Object.keys(PROVIDER_IDS).some(platform => !verifiedPlatforms.has(platform))}
+              disabled={isLoading || !formData.name || !formData.email}
             >
               Mint NFT
             </button>

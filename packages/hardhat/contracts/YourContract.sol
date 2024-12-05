@@ -42,7 +42,7 @@ contract YourContract is ERC721Enumerable {
         string memory _githubUsername,
         string memory _codeChefUsername,
         string memory _linkedInProfile
-    ) public isOwner returns (uint256) {
+    ) public returns (uint256) {
         totalPortfolios++;
         
         _safeMint(_to, totalPortfolios);
