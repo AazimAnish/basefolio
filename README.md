@@ -1,80 +1,104 @@
-# 🏗 Scaffold-ETH 2
+Basefolio
+=========
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+**Built at Hyperthon - Speed Coding Competition**\
+📅 **Thursday, December 5, 6:00 PM - 9:00 PM**\
+📍 **The Den Bengaluru, Bengaluru, Karnataka**
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
-
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
-
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
-
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
-
-## Requirements
-
-Before you begin, you need to install the following tools:
-
-- [Node (>= v18.18)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
-
-## Quickstart
-
-To get started with Scaffold-ETH 2, follow the steps below:
-
-1. Install dependencies if it was skipped in CLI:
-
-```
-cd my-dapp-example
-yarn install
-```
-
-2. Run a local network in the first terminal:
-
-```
-yarn chain
-```
-
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/hardhat/hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contracts in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
+* * * * *
 
 
-## Documentation
+### 🛠️ About Basefolio
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+**Basefolio** is an NFT-based professional portfolio solution created within **3 hours** during the Hyperthon coding event. It's designed to empower professionals to mint and manage their digital portfolios securely and transparently on the blockchain.
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+* * * * *
 
-## Contributing to Scaffold-ETH 2
+🚀 Project Highlights
+---------------------
 
-We welcome contributions to Scaffold-ETH 2!
+-   **Zero-Knowledge Proof Integration**: Ensures privacy for sensitive user data while maintaining the authenticity of portfolios.
+-   **NFT Minting**: Convert your professional portfolio into a unique, tamper-proof NFT with a verifiable on-chain record.
+-   **Reclaim Integration**: Provides secure wallet authentication and uses verifiable credentials for seamless login and data sharing.
+-   **Dynamic Metadata Storage**: Links professional details such as GitHub profiles, CodeChef stats, and LinkedIn connections to minted NFTs.
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+* * * * *
+
+🌟 Built With
+-------------
+
+**Tech Stack**:
+
+-   **[eth-scaffold](https://github.com/scaffold-eth/scaffold-eth)**: Modernized Scaffold-ETH featuring Next.js, RainbowKit, Wagmi, and TypeScript, providing a streamlined developer experience.
+-   **Hardhat**: Ethereum development environment for compiling, deploying, and testing smart contracts.
+-   **Reclaim Protocol**: Integrated for authentication and Zero-Knowledge Proof generation.
+
+* * * * *
+
+💡 Use Cases and Problem Solved
+-------------------------------
+
+### Market Loopholes
+
+1.  **Forgery**: Traditional resumes and portfolios can be faked or tampered with.
+2.  **Lack of Transparency**: Hiring managers often struggle to verify credentials efficiently.
+3.  **Data Privacy**: Users risk exposing sensitive personal information while showcasing their skills.
+
+### Solutions Provided by Basefolio
+
+-   **Immutable Records**: Blockchain-backed NFT portfolios ensure authenticity and traceability.
+-   **Privacy with ZKP**: Sensitive data is verified using Zero-Knowledge Proofs, ensuring confidentiality while validating credentials.
+-   **Dynamic Updates**: Update your portfolio details seamlessly without losing the integrity of your NFT.
+
+* * * * *
+
+💻 How Basefolio Works
+----------------------
+
+### 1\. Portfolio Minting
+
+-   Users submit details like name, email, GitHub, CodeChef, and LinkedIn profiles.
+-   The contract mints an NFT representing the user's portfolio, storing metadata on-chain.
+
+### 2\. Reclaim Protocol Integration
+
+-   Utilizes verifiable credentials for wallet-based authentication.
+-   Zero-Knowledge Proofs validate user data without exposing sensitive details.
+
+### 3\. Ownership and Transparency
+
+-   Minted NFTs are linked to the user's wallet, ensuring that the portfolio remains secure and tamper-proof.
+-   Employers can verify the authenticity of portfolios by checking the NFT metadata on-chain.
+
+* * * * *
+
+🛠️ Features Completed (7 Commits)
+----------------------------------
+
+1.  **Contract Deployment**: ERC721-based NFT smart contract for portfolio minting.
+2.  **Portfolio Metadata**: Struct to store professional details securely on-chain.
+3.  **Minting Functionality**: Secure NFT minting with `_safeMint`.
+4.  **Integration with Reclaim Protocol**: Wallet-based authentication with ZKP.
+5.  **Frontend Interface**: Built with eth-scaffold (Next.js + Wagmi + RainbowKit).
+6.  **Dynamic Metadata Retrieval**: View and update professional details via NFT metadata.
+7.  **Testing and Deployment**: Deployed contracts using Hardhat.
+
+* * * * *
+
+🌐 Use Case Example
+-------------------
+
+Imagine you're applying for a job and want to showcase your verified achievements:
+
+1.  **Mint Your Portfolio NFT**: Provide details like your GitHub and LinkedIn profiles and mint your portfolio.
+2.  **Share Securely**: Use Reclaim Protocol to share your portfolio with potential employers without exposing sensitive data.
+3.  **Employers Verify**: Employers verify the NFT on-chain, ensuring the authenticity of your skills and experience.
+
+* * * * *
+
+💡 Future Scope
+---------------
+
+1.  **Integration with More Platforms**: Support additional professional platforms like Dribbble, LeetCode, and Kaggle.
+2.  **Customizable Portfolios**: Allow users to add multimedia and tailor their portfolio NFTs.
+3.  **Analytics Dashboard**: Track NFT interactions and verify statistics for user profiles.
