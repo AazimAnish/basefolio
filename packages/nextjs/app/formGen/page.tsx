@@ -258,7 +258,7 @@ export default function PortfolioForm() {
           {Object.keys(PROVIDER_IDS).map((platform) => (
             <div key={platform} className="form-control">
               <label className="label">
-                <span className="label-text capitalize">{platform} Username (Optional)</span>
+                <span className="label-text capitalize">{platform} Username</span>
                 <button 
                   className={`btn btn-sm ${verifiedPlatforms.has(platform) ? 'btn-success' : 'btn-outline'}`}
                   onClick={() => handleVerify(platform)}
@@ -266,14 +266,6 @@ export default function PortfolioForm() {
                   {verifiedPlatforms.has(platform) ? 'Verified ✓' : 'Verify with Reclaim'}
                 </button>
               </label>
-              <input
-                type="text"
-                id={platform}
-                className={`input input-bordered ${verifiedPlatforms.has(platform) ? 'input-success' : ''}`}
-                value={formData[platform as keyof FormData]}
-                onChange={handleInputChange}
-                readOnly={verifiedPlatforms.has(platform)}
-              />
             </div>
           ))}
 
