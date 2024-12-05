@@ -1,78 +1,74 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-// Useful for debugging. Remove when deploying to a live network.
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "hardhat/console.sol";
 
-// Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
-// import "@openzeppelin/contracts/access/Ownable.sol";
+contract YourContract is ERC721Enumerable {
+    // Portfolio Struct
+    struct Portfolio {
+        string name;
+        string email;
+        string githubUsername;
+        string codeChefUsername;
+        string linkedInProfile;
+    }
 
-/**
- * A smart contract that allows changing a state variable of the contract and tracking the changes
- * It also allows the owner to withdraw the Ether in the contract
- * @author BuidlGuidl
- */
-contract YourContract {
     // State Variables
     address public immutable owner;
-    string public greeting = "Building Unstoppable Apps!!!";
-    bool public premium = false;
-    uint256 public totalCounter = 0;
-    mapping(address => uint) public userGreetingCounter;
+    mapping(uint256 => Portfolio) private portfolios;
+    uint256 public totalPortfolios = 0;
 
-    // Events: a way to emit log statements from smart contract that can be listened to by external parties
-    event GreetingChange(address indexed greetingSetter, string newGreeting, bool premium, uint256 value);
+    // Events
+    event PortfolioMinted(
+        address indexed creator, 
+        uint256 tokenId, 
+        string name
+    );
 
-    // Constructor: Called once on contract deployment
-    // Check packages/hardhat/deploy/00_deploy_your_contract.ts
-    constructor(address _owner) {
+    constructor(address _owner) ERC721("PortfolioNFT", "PFNFT") {
         owner = _owner;
     }
 
-    // Modifier: used to define a set of rules that must be met before or after a function is executed
-    // Check the withdraw() function
     modifier isOwner() {
-        // msg.sender: predefined variable that represents address of the account that called the current function
         require(msg.sender == owner, "Not the Owner");
         _;
     }
 
-    /**
-     * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters
-     *
-     * @param _newGreeting (string memory) - new greeting to save on the contract
-     */
-    function setGreeting(string memory _newGreeting) public payable {
-        // Print data to the hardhat chain console. Remove when deploying to a live network.
-        console.log("Setting new greeting '%s' from %s", _newGreeting, msg.sender);
+    function mintPortfolio(
+        address _to,
+        string memory _name,
+        string memory _email,
+        string memory _githubUsername,
+        string memory _codeChefUsername,
+        string memory _linkedInProfile
+    ) public isOwner returns (uint256) {
+        totalPortfolios++;
+        
+        _safeMint(_to, totalPortfolios);
 
-        // Change state variables
-        greeting = _newGreeting;
-        totalCounter += 1;
-        userGreetingCounter[msg.sender] += 1;
+        portfolios[totalPortfolios] = Portfolio({
+            name: _name,
+            email: _email,
+            githubUsername: _githubUsername,
+            codeChefUsername: _codeChefUsername,
+            linkedInProfile: _linkedInProfile
+        });
 
-        // msg.value: built-in global variable that represents the amount of ether sent with the transaction
-        if (msg.value > 0) {
-            premium = true;
-        } else {
-            premium = false;
-        }
-
-        // emit: keyword used to trigger an event
-        emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, msg.value);
+        emit PortfolioMinted(msg.sender, totalPortfolios, _name);
+        return totalPortfolios;
     }
 
-    /**
-     * Function that allows the owner to withdraw all the Ether in the contract
-     * The function can only be called by the owner of the contract as defined by the isOwner modifier
-     */
+    function getPortfolio(uint256 _tokenId) public view returns (Portfolio memory) {
+        require(_tokenId > 0 && _tokenId <= totalPortfolios, "Portfolio does not exist");
+        return portfolios[_tokenId];
+    }
+
     function withdraw() public isOwner {
-        (bool success, ) = owner.call{ value: address(this).balance }("");
-        require(success, "Failed to send Ether");
+        uint256 balance = address(this).balance;
+        (bool success, ) = owner.call{value: balance}("");
+        require(success, "Transfer failed");
     }
 
-    /**
-     * Function that allows the contract to receive ETH
-     */
     receive() external payable {}
 }

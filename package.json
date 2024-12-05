@@ -41,5 +41,8 @@
   "packageManager": "yarn@3.2.3",
   "engines": {
     "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@reclaimprotocol/js-sdk": "^2.1.2"
   }
 }
