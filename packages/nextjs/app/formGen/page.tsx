@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ReclaimProofRequest } from '@reclaimprotocol/js-sdk';
 import { QRCodeSVG } from 'qrcode.react';
 import { useToast } from "~~/hooks/useToast";
-import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldWriteContract, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { useAccount } from 'wagmi';
 
 interface Platform {
@@ -19,6 +19,14 @@ interface FormData {
   github: string;
   codechef: string;
   linkedin: string;
+}
+
+interface Portfolio {
+  name: string;
+  email: string;
+  githubUsername: string;
+  codeChefUsername: string;
+  linkedInProfile: string;
 }
 
 const APP_ID = process.env.NEXT_PUBLIC_RECLAIM_APP_ID || '';
@@ -42,9 +50,22 @@ export default function PortfolioForm() {
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [currentPlatform, setCurrentPlatform] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedTokenId, setSelectedTokenId] = useState<number>(1);
+  const [showPortfolio, setShowPortfolio] = useState<boolean>(false);
   const { toast } = useToast();
   const { writeContractAsync } = useScaffoldWriteContract("YourContract");
   const { address } = useAccount();
+
+  const { data: totalPortfolios } = useScaffoldReadContract({
+    contractName: "YourContract",
+    functionName: "totalPortfolios",
+  });
+
+  const { data: portfolioData } = useScaffoldReadContract({
+    contractName: "YourContract",
+    functionName: "getPortfolio",
+    args: [BigInt(selectedTokenId)],
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -52,6 +73,13 @@ export default function PortfolioForm() {
       ...prev,
       [id]: value
     }));
+  };
+
+  const handleTokenIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value > 0 && value <= Number(totalPortfolios)) {
+      setSelectedTokenId(value);
+    }
   };
 
   const initializeReclaim = async (platform: string): Promise<boolean> => {
@@ -249,7 +277,7 @@ export default function PortfolioForm() {
             </div>
           ))}
 
-          <div className="card-actions justify-end mt-6">
+          <div className="card-actions justify-end mt-6 space-x-2">
             <button 
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               onClick={mintNFT}
@@ -257,7 +285,42 @@ export default function PortfolioForm() {
             >
               Mint NFT
             </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowPortfolio(!showPortfolio)}
+            >
+              {showPortfolio ? 'Hide NFTs' : 'View NFTs'}
+            </button>
           </div>
+
+          {showPortfolio && (
+            <div className="mt-6 p-4 bg-base-300 rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">View Portfolio NFTs</h3>
+              <div className="flex items-center space-x-4 mb-4">
+                <input
+                  type="number"
+                  min="1"
+                  max={Number(totalPortfolios)}
+                  value={selectedTokenId}
+                  onChange={handleTokenIdChange}
+                  className="input input-bordered w-24"
+                />
+                <span className="text-sm opacity-75">
+                  Total NFTs: {totalPortfolios?.toString() || '0'}
+                </span>
+              </div>
+              
+              {portfolioData && (
+                <div className="space-y-2">
+                  <p><strong>Name:</strong> {(portfolioData as Portfolio).name}</p>
+                  <p><strong>Email:</strong> {(portfolioData as Portfolio).email}</p>
+                  <p><strong>GitHub:</strong> {(portfolioData as Portfolio).githubUsername || 'Not provided'}</p>
+                  <p><strong>CodeChef:</strong> {(portfolioData as Portfolio).codeChefUsername || 'Not provided'}</p>
+                  <p><strong>LinkedIn:</strong> {(portfolioData as Portfolio).linkedInProfile || 'Not provided'}</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
